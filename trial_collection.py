@@ -1,3 +1,5 @@
+# PCA values NEED to be added ie k(?)
+
 import numpy as np
 from PIL import Image
 import glob
