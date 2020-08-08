@@ -1,3 +1,5 @@
+#Error equations REQUIRE modification
+
 import numpy as np
 
 
