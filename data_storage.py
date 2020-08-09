@@ -10,6 +10,7 @@ def store_data(X,y,total_images,pixels):
     try:
         cur.execute('SELECT y_row FROM Data_y ORDER BY y_row DESC LIMIT 1')
         last_row = cur.fetchone()[0]
+        print('received last datapoint :',last_row)
 
     except:
         last_row = 0

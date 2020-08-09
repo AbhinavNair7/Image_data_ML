@@ -1,48 +1,43 @@
-# PCA values NEED to be added ie k(?)
-
 import numpy as np
 from PIL import Image
 import glob
 from PCA import PCA
+import time
 
 
-def trial_collect(folder,cancer_type,reduce=0,Old_X=None,Old_y=None):
+def trial_collect(folder,cancer_type,Old_X=None,Old_y=None):
 
     file = glob.glob('data/'+folder+'/*.tif')
     total_images = len(file)
+    X = np.zeros((total_images,168000))
     y = np.zeros((total_images,3))
-    red_array = np.zeros((total_images,10000))
-    #green_array = np.zeros((total_images,1443520))
-    #blue_array = np.zeros((total_images,1443520))
     count = 0
 
     for img_name in file:
         img = Image.open(img_name)
         img_array = np.array(img)
-        r_array = img_array[:,:,0]
+        new_array = np.zeros((800,70,3))
 
-        if reduce == 1:
-            m = np.shape(r_array)[0]
-            r_array = PCA(r_array,m,?)
-            r_array = np.transpose(r_array)
+        if count == 0 or count == 49 or count == 99:
+            start_time = time.time()
 
-            m = np.shape(r_array)[0]
-            r_array = PCA(r_array,m,?)
-            r_array = np.transpose(r_array)
+        for i in range(3):
+            array = np.transpose(img_array[:,:,i])
+            m = np.shape(array)[0]
+            array,*extra = PCA(array,m,800)
+            array = np.transpose(array)
 
+            m = np.shape(array)[0]
+            new_array[:,:,i],*extra = PCA(array,m,70)
 
-        #g_array = img_array[:,:,1]
-        #b_array = img_array[:,:,2]
-
-        red_array[count,:] = np.concatenate((r_array),axis=None)
-        #green_array[count,:] = np.concatenate((g_array),axis=None)
-        #blue_array[count,:] = np.concatenate((b_array),axis=None)
+        X[count,:] = np.concatenate((new_array[:,:,0],new_array[:,:,1],new_array[:,:,2]),axis=None)
         y[count,cancer_type-1] = 1
 
-
         count += 1
-        print(str(count),'/',str(total_images))
 
-    X = np.concatenate((red_array,green_array,blue_array),axis = 1)
+        if count == 1 or count == 50 or count == 100:
+            print(str(count),'/',str(total_images))
+            end_time = time.time()
+            print((end_time-start_time)*(total_images-count)/60,'mins left')
 
-    return(red_array,y,total_images)
+    return(X,y,total_images)
