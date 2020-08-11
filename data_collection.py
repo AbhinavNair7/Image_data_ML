@@ -3,7 +3,7 @@ from PIL import Image
 import glob
 
 
-def data_collect(folder,cancer_type,Old_X=None,Old_y=None):
+def data_collect(folder,cancer_type,K=0,Old_X=None,Old_y=None):
 
     file = glob.glob('data/'+folder+'/*.tif')
     total_images = len(file)
@@ -30,5 +30,8 @@ def data_collect(folder,cancer_type,Old_X=None,Old_y=None):
     if type(Old_X) == type(X):
         X = np.concatenate((Old_X,X),axis=0)
         y = np.concatenate((Old_y,y),axis=0)
+
+    if K!=0:
+        X,*extra = PCA(X,total_images,K)
 
     return(X,y,total_images,pixels)

@@ -5,7 +5,7 @@ from PCA import PCA
 import time
 
 
-def trial_collect(folder,cancer_type,Old_X=None,Old_y=None):
+def pca_collect(folder,cancer_type):
 
     file = glob.glob('data/'+folder+'/*.tif')
     total_images = len(file)
@@ -40,4 +40,5 @@ def trial_collect(folder,cancer_type,Old_X=None,Old_y=None):
             end_time = time.time()
             print((end_time-start_time)*(total_images-count)/60,'mins left')
 
-    return(X,y,total_images)
+
+    return(X,y)
